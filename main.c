@@ -1,13 +1,19 @@
 #include <stdio.h>
-extern long long sumar();
+#include <stdlib.h>
+#include "juego.h"
 
 int main() {
 
-    long long resultado;
+    char tecla;
 
-    resultado = sumar();
-
-    printf("Resultado: %lld\n", resultado);
-
+    while(1){
+        imprimirMapa();
+        printf("Ingrese una tecla (w/a/s/d para mover, q para salir): ");
+        scanf(" %c", &tecla);
+        if(tecla == 'q'){
+            break;
+        }
+        moverJugador(tecla);
+    }
     return 0;
 }
