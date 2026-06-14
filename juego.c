@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include "juego.h"
 #include "mapas.h"
 
 int filaJugador = 1;
 int colJugador =1;
 int monedas = 0;
+bool llave = false;
 
 void imprimirMapa(){
     int i;
@@ -21,6 +24,12 @@ void imprimirMapa(){
         printf("\n");
     }
     printf("\nMonedas: %d\n", monedas);
+    printf("Llave: ");
+    if(llave){
+        printf("1\n");
+    }else{
+        printf("0\n");
+    }
 }
 
 void moverJugador(char tecla){
@@ -37,6 +46,17 @@ void moverJugador(char tecla){
         nuevaCol++;
     }
 
+    if(mapa[nuevaFila][nuevaCol] == 'K'){
+        llave = true;
+        mapa[nuevaFila][nuevaCol] = '.';
+    }
+    if(mapa[nuevaFila][nuevaCol] == 'D' && llave){
+        printf("Has ganado!\n");
+        exit(0);
+    }else if(mapa[nuevaFila][nuevaCol] == 'D' && !llave){
+        printf("Encuentra la llave!\n");
+        return;
+    }
     if(mapa[nuevaFila][nuevaCol] != '#'){
         if(mapa[nuevaFila][nuevaCol] == 'M'){
         monedas++;
