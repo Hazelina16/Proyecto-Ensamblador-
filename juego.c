@@ -4,6 +4,7 @@
 
 int filaJugador = 1;
 int colJugador =1;
+int monedas = 0;
 
 void imprimirMapa(){
     int i;
@@ -19,12 +20,13 @@ void imprimirMapa(){
         }
         printf("\n");
     }
+    printf("\nMonedas: %d\n", monedas);
 }
 
 void moverJugador(char tecla){
     int nuevaFila = filaJugador;
-    int nuevaCol = colJugador; 
-
+    int nuevaCol = colJugador;
+    
     if(tecla == 'w'){
         nuevaFila--;
     }else if(tecla == 's'){
@@ -34,7 +36,12 @@ void moverJugador(char tecla){
     }else if(tecla == 'd'){
         nuevaCol++;
     }
+
     if(mapa[nuevaFila][nuevaCol] != '#'){
+        if(mapa[nuevaFila][nuevaCol] == 'M'){
+        monedas++;
+        mapa[nuevaFila][nuevaCol] = '.';
+        }
         filaJugador = nuevaFila;
         colJugador = nuevaCol;
     }
