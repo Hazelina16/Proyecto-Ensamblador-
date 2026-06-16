@@ -10,6 +10,8 @@
 int filaJugador = 1;
 int colJugador =1;
 int monedas = 0;
+int totalMonedas = 0;
+int pasos = 0;
 bool llave = false;
 int nivelActual = 1;
 
@@ -31,6 +33,7 @@ void cargarMapa(char nombreArchivo[]){
         }
         fscanf(archivo, "%*c");
     }
+    totalMonedas = contarCaracteres(&mapa[0][0], 3600, 'M');
     fclose(archivo);
 }
 
@@ -80,7 +83,10 @@ void imprimirMapa() {
         }
         printf("\n");
     }
-    printf("\nMonedas: %d\n", monedas);
+    printf("\nMonedas: %d/%d\n", monedas, totalMonedas);
+    printf("Pasos: %d\n", pasos);
+    printf("Celdas libres: %d\n", contarCeldasLibres(&mapa[0][0], 3600));
+    printf("Puntaje: %d\n", calcularPuntaje(monedas, pasos, nivelActual));
     printf("Llave: ");
     if(llave){
         printf("1\n");
@@ -103,15 +109,15 @@ void moverJugador(char tecla){
         nuevaCol++;
     }
 
-    if(mapa[nuevaFila][nuevaCol] == 'M'){
+    if(detectarObjeto(&mapa[0][0], 60, nuevaFila, nuevaCol, 'M')){
         monedas++;
         mapa[nuevaFila][nuevaCol] = '.';
     }
-    if(mapa[nuevaFila][nuevaCol] == 'K'){
+    if(detectarObjeto(&mapa[0][0], 60, nuevaFila, nuevaCol, 'K')){
         llave = true;
         mapa[nuevaFila][nuevaCol] = '.';
     }
-    if(mapa[nuevaFila][nuevaCol] == 'D') {
+    if(detectarObjeto(&mapa[0][0], 60, nuevaFila, nuevaCol, 'D')) {
         if(llave) {
             filaJugador = nuevaFila;
             colJugador = nuevaCol;
@@ -121,12 +127,14 @@ void moverJugador(char tecla){
         }
         return;
     }
-    if(mapa[nuevaFila][nuevaCol] == 'X') {
+    if(detectarObjeto(&mapa[0][0], 60, nuevaFila, nuevaCol, 'X')) {
         nivelActual++;
         if(nivelActual == 2) {
+            printf("\nNivel 1 completado! Pasando al nivel 2...\n");
             cargarMapa("mapas/nivel2.txt");
         }
         else if(nivelActual == 3) {
+            printf("\nNivel 2 completado! Pasando al nivel 3...\n");
             cargarMapa("mapas/nivel3.txt");
         }
         else {
@@ -138,11 +146,12 @@ void moverJugador(char tecla){
         llave = false;
         return;
     }
-    if(mapa[nuevaFila][nuevaCol] == '#') {
-        printf("\nNo puedes pasar por una pared!\n");
+    if(!validarMovimiento(&mapa[0][0], 60, nuevaFila, nuevaCol)){
+        printf("No puedes pasar por una pared!\n");
         return;
     }
 
+    pasos++;
     filaJugador = nuevaFila;
     colJugador = nuevaCol;
 }
